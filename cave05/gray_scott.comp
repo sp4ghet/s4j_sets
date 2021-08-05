@@ -1,0 +1,90 @@
+#version 440
+
+layout(local_size_x = 9, local_size_y = 9) in;
+layout(rgba32f) uniform image2D compy;
+
+uniform vec4 buttons[32];
+uniform vec4 resolution;
+uniform float time;
+uniform float beat;
+
+uniform sampler2D scene;
+
+#define saturate(a) clamp(a, 0, 1)
+
+
+const float kern[9] = float[](.05, .2, .05, .2, -1, .2, .05, .2, .05);
+const vec2 params[4] = vec2[](vec2(.055, .062), vec2(.029, 0.057), vec2(0.028, 0.062), vec2(0.03, 0.06));
+
+void main() {
+  // get index in global work group i.e x,y position
+  ivec2 pixel_coords = ivec2(gl_GlobalInvocationID.xy);
+  vec4 pixel = imageLoad(compy, pixel_coords);
+  // game of life
+  float lives=0;
+  for(int x=-1; x<=1; x++) for(int y=-1; y<=1; y++){
+      vec4 tmp = imageLoad(compy, pixel_coords + ivec2(x,y));
+      if(x == 0 && y == 0){
+          pixel.r = tmp.r;
+      }else{
+          lives += abs(tmp.r - 1) < .1 ? 1 : 0;
+      }
+  }
+
+
+  bool off = pixel.r == 0;
+  bool dead = pixel.r == 0.5;
+  bool live = pixel.r == 1;
+
+  pixel.r = dead ? 0 : pixel.r;
+  pixel.r = off && lives == 2  ? 1 : 0;
+  pixel.r = live ? 0.5 : pixel.r;
+
+
+  // output to a specific pixel in the image
+  memoryBarrier();
+  imageStore(compy, pixel_coords, pixel);
+
+  for(int i=0; i<10; i++){
+    pixel = imageLoad(compy, pixel_coords);
+    // base pixel colour for image
+    float lapA = 0, lapB = 0;
+
+    for(int x=-1; x<=1; x++) for(int y=-1; y<=1; y++){
+      int yy = y + 1, xx = x+1;
+      vec4 tmp = imageLoad(compy, pixel_coords + ivec2(x,y));
+      lapA += kern[yy*3 + xx] * tmp.a;
+      lapB += kern[yy*3 + xx] * tmp.b;
+    }
+
+    float reaction = pixel.a * pixel.b * pixel.b;
+    float da = 1;
+    float db = .5;
+    int param_id = int(floor(mod(buttons[7].w, 4)));
+    float f = params[param_id].x;
+    float k = params[param_id].y;
+    pixel.a += (da * lapA - reaction + f*(1-pixel.a));
+    pixel.b += (db * lapB + reaction - (k+f)*pixel.b);
+
+    imageStore(compy, pixel_coords, pixel);
+    memoryBarrier();
+  }
+
+  if( buttons[5].x > .1){
+    vec2 val = vec2(1.,0.);
+    vec2 uv = pixel_coords / resolution.xy;
+    val.y = texture(scene, uv).a;
+    pixel.b = val.y;
+  }
+
+  if(buttons[6].x > 0.1){
+    pixel.r = saturate(pixel.r);
+    pixel.b = pixel.r;
+  }else{
+    pixel.r = step(.2, pixel.b);
+  }
+  pixel.ab = saturate(pixel.ab);
+
+  memoryBarrier();
+  imageStore(compy, pixel_coords, pixel);
+}

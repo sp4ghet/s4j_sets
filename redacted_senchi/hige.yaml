@@ -1,0 +1,57 @@
+stages:
+  - vs: "./audio/osci.vert"
+    mode: "LINES"
+    count: 8192
+    line_width: 2
+    target: "osci"
+  - vs: "./audio/fft.vert"
+    mode: "LINES"
+    count: 8192
+    line_width: 5
+    target: "fft"
+
+  - cs: "particle_pos.comp"
+    target: particle_pos
+    float: true
+    resolution: [10000, 200, 2]
+    dispatch_size: [100, 200, 1]
+  - vs: "draw_particle.vert"
+    count: 8000000
+    mode: LINES
+    target: particles
+    thickness: 2
+  - fs: present.frag
+    target: render
+
+  - fs: post.frag
+    target: scene
+  - fs: foreground.frag
+    target: foreground
+
+  - fs: composite.frag
+    target: composite
+    mipmap: true
+  - fs: screenspace.frag
+    target: render
+  - fs: radial_blur.frag
+
+images:
+  - path: "./images/dots.png"
+    name: "dots"
+  - path: "./images/text.png"
+    name: "font_atlas"
+  - path: "./images/logo.PNG"
+    name: "logo"
+
+audio:
+  audio_samples: 4096
+  attack: 0.6
+  decay: 0.6
+  spectrum_smooth:
+    filter: linear
+    mipmap: true
+  spectrum:
+    filter: linear
+    mipmap: true
+  samples:
+    filter: linear

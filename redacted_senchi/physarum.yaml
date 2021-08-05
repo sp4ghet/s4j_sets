@@ -1,0 +1,57 @@
+stages:
+  - vs: "./audio/osci.vert"
+    mode: "LINES"
+    count: 8192
+    line_width: 2
+    target: "osci"
+  - vs: "./audio/fft.vert"
+    mode: "LINES"
+    count: 8192
+    line_width: 5
+    target: "fft"
+
+  - cs: physarum_parti.comp
+    target: phys_parti
+    resolution: [2000, 2000]
+    dispatch_size: [200, 200]
+    float: true
+  - cs: physarum_trail.comp
+    target: phys_trail
+    resolution: [1280, 720]
+    dispatch_size: [320, 180]
+    float: true
+  - fs: physarum_view.frag
+    target: render
+
+  - fs: post.frag
+    target: scene
+  - fs: foreground.frag
+    target: foreground
+
+  - fs: composite.frag
+    target: composite
+    mipmap: true
+  - fs: screenspace.frag
+    target: render
+  - fs: radial_blur.frag
+
+images:
+  - path: "./images/dots.png"
+    name: "dots"
+  - path: "./images/text.png"
+    name: "font_atlas"
+  - path: "./images/logo.PNG"
+    name: "logo"
+
+audio:
+  audio_samples: 4096
+  attack: 0.6
+  decay: 0.6
+  spectrum_smooth:
+    filter: linear
+    mipmap: true
+  spectrum:
+    filter: linear
+    mipmap: true
+  samples:
+    filter: linear

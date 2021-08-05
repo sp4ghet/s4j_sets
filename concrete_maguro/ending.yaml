@@ -1,0 +1,149 @@
+stages:
+  - vs: audio/fft.vert
+    target: fft
+    count: 40000
+    mode: LINES
+    thickness: 2
+  - vs: audio/osci.vert
+    target: osci
+    count: 16384
+    mode: LINES
+    thickness: 2
+
+  - fs: ending/ending1.frag
+    target: lyrics
+  - fs: ending/ending2.frag
+    target: lyrics
+  - fs: ending/post.frag
+    target: scene
+  - fs: foreground.frag
+    target: foreground
+
+  - fs: composite.frag
+    target: composite
+    mipmap: true
+  - fs: screenspace.frag
+
+images:
+  - path: images/yurayura.png
+    name: yurayura
+  - path: images/Checker_crt.png
+    name: checker
+  - path: images/CRT_Overlay.png
+    name: overlay
+
+  - path: images/ending/ocaeri.png
+    name: ocaeri
+  - path: images/ending/cocothume.png
+    name: cocothume
+  - path: images/ending/sosite.png
+    name: sosite
+  - path: images/ending/arigato.png
+    name: arigato
+
+  - path: images/ending/su.png
+    name: su
+  - path: images/ending/shi.png
+    name: shi
+
+  - path: images/lyrics/ciniiruto_iina.png
+    name: ciniiruto
+  - path: images/lyrics/shibotta_inochiwo.png
+    name: shibotta
+  - path: images/lyrics/tabenocosu.png
+    name: tabenocosu
+  - path: images/lyrics/mou_owari.png
+    name: mou_owari
+  - path: images/lyrics/sacebi.png
+    name: sacebi
+  - path: images/lyrics/tsubureru.png
+    name: tsubureru
+  - path: images/lyrics/gouonde.png
+    name: gouonde
+  - path: images/lyrics/utau_saru.png
+    name: utau_saru
+  - path: images/lyrics/itecurereba_0.png
+    name: itecurereba_0
+  - path: images/lyrics/iidace_0.png
+    name: iidace_0
+  - path: images/lyrics/cireina.png
+    name: cireina
+  - path: images/lyrics/agetacunaru.png
+    name: agetacunaru
+  - path: images/lyrics/carerumade.png
+    name: carerumade
+  - path: images/lyrics/hanatu.png
+    name: hanatu
+  - path: images/lyrics/naniiro.png
+    name: naniiro
+  - path: images/lyrics/mieru.png
+    name: mieru
+  - path: images/lyrics/darouca.png
+    name: darouca
+  - path: images/lyrics/ugocanai.png
+    name: ugocanai
+  - path: images/lyrics/curuumade.png
+    name: curuumade
+  - path: images/lyrics/hazucasisa.png
+    name: hazucasisa
+  - path: images/lyrics/nacunaru.png
+    name: nacunaru
+
+  - path: images/lyrics/itecurereba_1.png
+    name: itecurereba_1
+  - path: images/lyrics/iidace_1.png
+    name: iidace_1
+  - path: images/lyrics/itecurereba_2.png
+    name: itecurereba_2
+  - path: images/lyrics/iidace_2.png
+    name: iidace_2
+  - path: images/lyrics/itecurereba_3.png
+    name: itecurereba_3
+  - path: images/lyrics/iidace_3.png
+    name: iidace_3
+  - path: images/lyrics/itecurereba_4.png
+    name: itecurereba_4
+  - path: images/lyrics/iidace_4.png
+    name: iidace_4
+  - path: images/lyrics/itecurereba_5.png
+    name: itecurereba_5
+  - path: images/lyrics/iidace_5.png
+    name: iidace_5
+  - path: images/lyrics/itecurereba_6.png
+    name: itecurereba_6
+  - path: images/lyrics/iidace_6.png
+    name: iidace_6
+  - path: images/lyrics/itecurereba_7.png
+    name: itecurereba_7
+  - path: images/lyrics/iidace_7.png
+    name: iidace_7
+  - path: images/lyrics/itecurereba_8.png
+    name: itecurereba_8
+  - path: images/lyrics/iidace_8.png
+    name: iidace_8
+  - path: images/lyrics/itecurereba_9.png
+    name: itecurereba_9
+  - path: images/lyrics/iidace_9.png
+    name: iidace_9
+  - path: images/lyrics/itecurereba_10.png
+    name: itecurereba_10
+  - path: images/lyrics/iidace_10.png
+    name: iidace_10
+  - path: images/lyrics/itecurereba_11.png
+    name: itecurereba_11
+  - path: images/lyrics/iidace_11.png
+    name: iidace_11
+
+audio:
+  audio_samples: 4096
+  attack: 0.1
+  decay: 0.9
+  spectrum_smooth:
+    filter: linear
+    mipmap: true
+  spectrum:
+    filter: linear
+    wrap_mode: clamp
+    mipmap: true
+  samples:
+    filter: linear

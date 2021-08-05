@@ -1,0 +1,55 @@
+#version 440
+
+layout(local_size_x = 100, local_size_y = 1, local_size_z = 2) in;
+layout(rgba32f) uniform image3D particle_pos;
+
+
+uniform float sliders[32];
+uniform vec4 buttons[32];
+uniform vec4 resolution;
+uniform float time;
+uniform float beat;
+uniform vec3 bass_smooth;
+
+
+
+#include "lib/util.glsl"
+#include "lib/rng.glsl"
+
+void main() {
+    // get index in global work group i.e x,y position
+    ivec3 pixel_coords = ivec3(gl_GlobalInvocationID.xyz);
+    vec4 p = imageLoad(particle_pos, pixel_coords);
+    int x = pixel_coords.x;
+
+    if(isPress(buttons[10])){
+            if(pixel_coords.z == 0){
+                p.xyz = 3*random_sphere(pixel_coords.xx + time);
+            }
+
+            if(pixel_coords.z == 1){
+                p.xyz = random_sphere(pixel_coords.xx - time);
+            }
+    }else{
+        if(pixel_coords.y != 0){
+            p.xyz = imageLoad(particle_pos, pixel_coords + ivec3(0, -1, 0)).xyz;
+        }else{
+            vec3 pos = imageLoad(particle_pos, ivec3(pixel_coords.xy, 0)).xyz;
+            vec3 v = imageLoad(particle_pos, ivec3(pixel_coords.xy, 1)).xyz;
+            vec3 f = vec3(noise(pos + vec3(pixel_coords.xz, time)), noise(pos + 20), noise(pos + 30.));
+            vec3 grav = -0.05 * pos;
+            v += f + grav;
+            v *= sliders[1] * bass_smooth.x;
+            // v *= .1;
+            if(pixel_coords.z == 0){
+                p.xyz +=  v;
+            }
+
+            if(pixel_coords.z == 1){
+                p.xyz = v;
+            }
+        }
+    }
+
+    imageStore(particle_pos, pixel_coords, p);
+}

@@ -1,0 +1,41 @@
+stages:
+    - cs: "./gray_scott.comp"
+      target: "compy"
+      cs_type: "2D"
+      resolution: [720, 480]
+      dispatch_size: [80, 54]
+
+    - vs: "./scenes/donut.vert"
+      mode: "LINES"
+      count: 24000
+      target: "render"
+    - fs: "./post.frag"
+      target: "scene"
+
+    - vs: "./audio/osci.vert"
+      mode: "LINES"
+      count: 8192
+      line_width: 2
+      target: "osci"
+    - vs: "./audio/fft.vert"
+      mode: "LINES"
+      count: 4096
+      line_width: 10
+      target: "fft"
+
+    - fs: "./foreground.frag"
+      target: "foreground"
+    - fs: "./composite.frag"
+      target: "composite"
+    - fs: "./screenspace.frag"
+images:
+  - path: "./images/cave_logo.png"
+    name: "cave_logo"
+  - path: "./images/mado.png"
+    name: "meme"
+  - path: "./images/jsp.png"
+    name: "jsp"
+  - path: "./images/text.png"
+    name: "font_atlas"
+  - path: "./images/dots.png"
+    name: "dots"

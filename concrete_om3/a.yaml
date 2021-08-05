@@ -1,0 +1,75 @@
+stages:
+    - cs: waterfall.comp
+      target: waterfall
+      float: true
+      resolution: [100, 100]
+      dispatch: [1,100]
+      filter: linear
+      wrap_mode: clamp
+
+    - vs: "./audio/osci.vert"
+      mode: "LINES"
+      count: 8192
+      line_width: 2
+      target: "osci"
+    - vs: "./audio/fft.vert"
+      mode: "LINES"
+      count: 4096
+      line_width: 3
+      target: "fft"
+
+    - vs: heightmap.vert
+      mode: TRIANGLES
+      count: 600000
+      thickness: 1
+      target: render
+
+    - fs: "./post.frag"
+      target: "scene"
+
+    - fs: "./foreground.frag"
+      target: "foreground"
+    - fs: "./composite.frag"
+      target: "composite"
+    - fs: "./screenspace.frag"
+
+images:
+  - path: "./images/jsp.png"
+    name: "jsp"
+  - path: "./images/text.png"
+    name: "font_atlas"
+  - path: "./images/dots.png"
+    name: "dots"
+  - path: images/CRT_Overlay.png
+    name: overlay
+
+  - path: images/FOCUS_1.png
+    name: focus_0
+  - path: images/FOCUS_7.png
+    name: focus_1
+  - path: images/FOCUS_8.png
+    name: focus_2
+  - path: images/FOCUS_9.png
+    name: focus_3
+  - path: images/FOCUS_10.png
+    name: focus_4
+  - path: images/FOCUS_11.png
+    name: focus_5
+  - path: images/FOCUS_12.png
+    name: focus_6
+  - path: images/LOGO_1.png
+    name: logo_0
+  - path: images/LOGO_2.png
+    name: logo_1
+
+audio:
+  attack: 0.5
+  decay: 0.3
+  spectrum:
+    filter: linear
+    wrap_mode: clamp
+    mipmap: true
+  spectrum_smooth:
+    filter: linear
+    wrap_mode: clamp
+    mipmap: true

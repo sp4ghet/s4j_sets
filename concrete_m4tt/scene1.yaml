@@ -1,0 +1,64 @@
+stages:
+
+  - vs: "./audio/osci.vert"
+    mode: "LINES"
+    count: 8192
+    line_width: 2
+    target: "osci"
+  - vs: "./audio/fft.vert"
+    mode: "LINES"
+    count: 8192
+    line_width: 5
+    target: "fft"
+
+  - vs: scene1/dots.vert
+    fs: scene1/dots.frag
+    count: 2000
+    mode: POINTS
+    thickness: 1
+    target: points
+    float: true
+  - fs: scene1/bg.frag
+    target: render
+    float: true
+
+  - fs: scene1/dof_1.frag
+    target: dof_1
+    float: true
+  - fs: scene1/dof_2.frag
+    target: dof_2
+    float: true
+  - fs: scene1/dof_3.frag
+    target: render
+    float: true
+
+  - fs: post.frag
+    target: scene
+
+  - fs: "./foreground.frag"
+    target: "foreground"
+
+  - fs: composite.frag
+    target: composite
+    mipmap: true
+  - fs: screenspace.frag
+
+images:
+  - path: images/yurayura.png
+    name: yurayura
+  - path: images/dots.png
+    name: dots
+    filter: linear
+    wrap_mode: repeat
+  - path: images/CRT_Overlay.png
+    name: overlay
+  - path: images/text.png
+    name: font_atlas
+
+audio:
+  audio_samples: 8192
+  spectrum:
+    filter: linear
+    mipmap: true
+  samples:
+    filter: linear

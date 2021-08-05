@@ -1,0 +1,45 @@
+stages:
+    - vs: "./audio/osci.vert"
+      mode: "LINES"
+      count: 8192
+      line_width: 2
+      target: "osci"
+    - vs: "./audio/fft.vert"
+      mode: "LINES"
+      count: 4096
+      line_width: 3
+      target: "fft"
+    - fs: tunnel.frag
+    # - fs: vertical_feedback.frag
+      target: render
+
+    - fs: "./post.frag"
+      target: "scene"
+
+    - fs: "./foreground.frag"
+      target: "foreground"
+    - fs: "./composite.frag"
+      target: "composite"
+    - fs: "./screenspace.frag"
+
+images:
+  - path: "./images/jsp.png"
+    name: "jsp"
+  - path: "./images/text.png"
+    name: "font_atlas"
+  - path: "./images/dots.png"
+    name: "dots"
+  - path: images/CRT_Overlay.png
+    name: overlay
+
+audio:
+  attack: 0.5
+  decay: 0.3
+  spectrum:
+    filter: linear
+    wrap_mode: clamp
+    mipmap: true
+  spectrum_smooth:
+    filter: linear
+    wrap_mode: clamp
+    mipmap: true

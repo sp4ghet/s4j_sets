@@ -1,0 +1,52 @@
+stages:
+  - vs: "./audio/osci.vert"
+    mode: "LINES"
+    count: 16384
+    line_width: 2
+    target: "osci"
+  - vs: "./audio/fft.vert"
+    mode: "LINES"
+    count: 16384
+    line_width: 5
+    target: "fft"
+
+  - fs: techno.frag
+    target: render
+
+  - fs: post.frag
+    target: scene
+  - fs: foreground.frag
+    target: foreground
+
+  - fs: composite.frag
+    target: composite
+    mipmap: true
+  - fs: screenspace.frag
+
+images:
+  - path: images/CRT_Overlay.png
+    name: overlay
+  - path: images/concrete_damaged_0046_01.jpg
+    name: albedo_tex
+    filter: linear
+    wrap_mode: repeat
+  - path: images/ConcreteRough_Normal.png
+    name: normal_tex
+    filter: linear
+    wrap_mode: repeat
+  - path: "./images/dots.png"
+    name: "dots"
+
+audio:
+  audio_samples: 4096
+  attack: 0.2
+  decay: 0.5
+  spectrum_smooth:
+    filter: nearest
+    mipmap: false
+    wrap_mode: clamp
+  spectrum:
+    filter: linear
+    mipmap: true
+  samples:
+    filter: linear

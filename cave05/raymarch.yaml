@@ -1,0 +1,55 @@
+stages:
+  - cs: "./particle_pos.comp"
+    target: "particle_pos"
+    resolution: [10000, 200, 2]
+    dispatch_size: [100, 200, 1]
+  - vs: "draw_particle.vert"
+    count: 8000000
+    mode: LINES
+    target: particles
+    point_size: 2
+
+  - cs: "./gray_scott.comp"
+    target: "compy"
+    resolution: [720, 480]
+    dispatch_size: [80, 54]
+
+  - fs: "./scenes/raymarch.frag"
+    target: "render"
+    float: true
+    mipmap: true
+  - fs: "./post.frag"
+    target: "scene"
+
+  - vs: "./audio/osci.vert"
+    mode: "LINES"
+    count: 8192
+    line_width: 2
+    target: "osci"
+  - vs: "./audio/fft.vert"
+    mode: "LINES"
+    count: 4096
+    line_width: 10
+    target: "fft"
+
+  - fs: "./foreground.frag"
+    target: "foreground"
+
+  - fs: "./composite.frag"
+    target: "composite"
+    mipmap: true
+
+  - fs: "./screenspace.frag"
+images:
+  - path: "./images/cave_logo.png"
+    name: "cave_logo"
+  - path: "./images/mado.png"
+    name: "meme"
+  - path: "./images/jsp.png"
+    name: "jsp"
+  - path: "./images/text.png"
+    name: "font_atlas"
+  - path: "./images/dots.png"
+    name: "dots"
+  - path: "./images/tyler.jpg"
+    name: "tyler"

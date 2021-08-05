@@ -1,0 +1,57 @@
+stages:
+    - vs: "./donut.vert"
+      mode: "LINES"
+      count: 24000
+      target: "render"
+    - fs: "./post.frag"
+      target: "scene"
+
+    - vs: "./audio/osci.vert"
+      mode: "LINES"
+      count: 8192
+      line_width: 2
+      target: "osci"
+    - vs: "./audio/fft.vert"
+      mode: "LINES"
+      count: 4096
+      line_width: 3
+      target: "fft"
+
+    - fs: "./foreground.frag"
+      target: "foreground"
+    - fs: "./composite.frag"
+      target: "composite"
+    - fs: "./screenspace.frag"
+images:
+  - path: "./images/jsp.png"
+    name: "jsp"
+  - path: "./images/text.png"
+    name: "font_atlas"
+  - path: "./images/dots.png"
+    name: "dots"
+  - path: images/CRT_Overlay.png
+    name: overlay
+
+  - path: images/FOCUS_1.png
+    name: focus_0
+  - path: images/FOCUS_7.png
+    name: focus_1
+  - path: images/FOCUS_8.png
+    name: focus_2
+  - path: images/FOCUS_9.png
+    name: focus_3
+  - path: images/FOCUS_10.png
+    name: focus_4
+  - path: images/FOCUS_11.png
+    name: focus_5
+  - path: images/FOCUS_12.png
+    name: focus_6
+  - path: images/LOGO_1.png
+    name: logo_0
+  - path: images/LOGO_2.png
+    name: logo_1
+
+audio:
+  spectrum_smooth:
+    mipmap: true
+    filter: nearest

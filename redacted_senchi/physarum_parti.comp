@@ -1,0 +1,80 @@
+#version 460
+
+layout(local_size_x = 10, local_size_y = 10) in;
+layout(rgba32f) coherent uniform image2D phys_parti;
+layout(rgba32f) coherent uniform image2D phys_trail;
+
+uniform sampler2D logo;
+uniform vec4 logo_res;
+
+uniform vec4 phys_trail_res;
+uniform vec4 phys_parti_res;
+
+uniform vec4 resolution;
+uniform float time;
+uniform float time_delta;
+uniform float sliders[32];
+uniform vec4 buttons[32];
+uniform vec3 bass_smooth;
+uniform vec3 bass_integrated;
+uniform vec3 volume;
+uniform vec3 volume_integrated;
+
+#include "lib/util.glsl"
+#include "lib/rng.glsl"
+
+void main(){
+    ivec2 pixel_coords = ivec2(gl_GlobalInvocationID.xy);
+    vec4 pixel = imageLoad(phys_parti, pixel_coords);
+    vec2 pos = pixel.rg;
+    vec2 dir = pixel.ba;
+
+    if(isPress(buttons[11])){
+        pos = 1.2 * vec2(hash(pixel_coords * time  + .3783), hash(pixel_coords * time + .7678));
+        dir = 1.18 * vec2(hash(pixel_coords * time + .5767), hash(pixel_coords * time)) - vec2(.5);
+    }
+    pos = fract(pos);
+    dir += .5 * vec2(noise(vec3(pos*5, time)), noise(vec3(pos*5, time + 20.)));
+    dir = normalize(dir);
+
+    float kotaisa = 1. + .5 * hash(pixel_coords);
+    float sens_len = .01;
+    float sens_angle = PI * (kotaisa * 20. / 180.);
+    float turn_angle = PI * (kotaisa * 40. / 180.);
+    float speed = .001;
+    float count = gl_NumWorkGroups.x * gl_NumWorkGroups.y * gl_WorkGroupSize.x * gl_WorkGroupSize.y;
+    float strength = .1;
+
+    vec2 lpos = pos + dir * sens_len * r2d(sens_angle);
+    vec2 cpos = pos + dir * sens_len;
+    vec2 rpos = pos + dir * sens_len * r2d(-sens_angle);
+
+    float l_val = imageLoad(phys_trail, ivec2(lpos * phys_trail_res.xy)).r;
+    float c_val = imageLoad(phys_trail, ivec2(cpos * phys_trail_res.xy)).r;
+    float r_val = imageLoad(phys_trail, ivec2(rpos * phys_trail_res.xy)).r;
+
+    if( c_val > l_val && c_val > r_val){
+
+    }else if(abs(l_val - r_val) < .01){
+        float lr = sign(random(pixel_coords.x + int(time)));
+        dir *= r2d(lr * turn_angle);
+    }else if(l_val > r_val){
+        dir *= r2d(turn_angle);
+    }else{
+        dir *= r2d(-turn_angle);
+    }
+
+    pos += dir * speed;
+    pos = fract(pos);
+
+
+    pixel = vec4(pos, dir);
+    imageStore(phys_parti, pixel_coords, pixel);
+
+    ivec2 ipos = ivec2(pos * phys_trail_res.xy);
+    vec4 val = imageLoad(phys_trail, ipos) + strength;
+    vec2 logoUV = pt2uv(uv2pt(pos) * phys_trail_res.xy / logo_res.xy * r2d(.1 * bass_integrated.x));
+    val *= 1. - texture(logo, logoUV).a;
+
+    imageStore(phys_trail, ipos, val);
+}

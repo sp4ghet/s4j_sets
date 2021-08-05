@@ -1,0 +1,21 @@
+#version 460
+
+layout(local_size_x = 4, local_size_y = 4) in;
+layout(rgba32f) uniform image2D phys_trail;
+
+
+void main(){
+    ivec2 pixel_coords = ivec2(gl_GlobalInvocationID.xy);
+    vec4 pixel = vec4(0);
+    vec4 now = imageLoad(phys_trail, pixel_coords);
+
+    for(int x=-1; x <= 1; x++) for(int y=-1; y<=1; y++){
+        ivec2 uv = pixel_coords + ivec2(x,y);
+        uv = uv % ivec2(1280,720);
+        pixel += imageLoad(phys_trail, uv);
+    }
+    pixel /= 9;
+    pixel = mix(now, pixel * .5, .5);
+
+    imageStore(phys_trail, pixel_coords, pixel);
+}

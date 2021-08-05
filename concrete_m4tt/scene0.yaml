@@ -1,0 +1,46 @@
+stages:
+
+  - vs: "./audio/osci.vert"
+    mode: "LINES"
+    count: 8192
+    line_width: 2
+    target: "osci"
+  - vs: "./audio/fft.vert"
+    mode: "LINES"
+    count: 8192
+    line_width: 5
+    target: "fft"
+
+  - fs: scene.frag
+    target: render
+    float: true
+    mipmap: true
+
+  - fs: post.frag
+    target: scene
+
+  - fs: "./foreground.frag"
+    target: "foreground"
+
+  - fs: composite.frag
+    target: composite
+    mipmap: true
+  - fs: screenspace.frag
+
+audio:
+  audio_samples: 8192
+  spectrum:
+    filter: linear
+    mipmap: true
+  samples:
+    filter: linear
+
+images:
+  - path: images/dots.png
+    name: dots
+    filter: linear
+    wrap_mode: repeat
+  - path: images/CRT_Overlay.png
+    name: overlay
+  - path: "./images/text.png"
+    name: "font_atlas"

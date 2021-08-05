@@ -1,0 +1,39 @@
+stages:
+  - vs: audio/fft.vert
+    target: fft
+    count: 40000
+    mode: LINES
+    thickness: 2
+  - vs: audio/osci.vert
+    target: osci
+    count: 8192
+    mode: LINES
+    thickness: 2
+
+  - vs: test.vert
+    count: 60000000
+    mode: TRIANGLES
+    target: render
+
+  - fs: post.frag
+    target: scene
+  - fs: "./foreground.frag"
+    target: "foreground"
+  - fs: composite.frag
+    target: composite
+    mipmap: true
+  - fs: screenspace.frag
+
+images:
+  - path: images/jsp.png
+    name: jsp
+    filter: linear
+    wrap_mode: repeat
+  - path: images/dots.png
+    name: dots
+    filter: linear
+    wrap_mode: repeat
+  - path: images/CRT_Overlay.png
+    name: overlay
+  - path: "./images/text.png"
+    name: "font_atlas"

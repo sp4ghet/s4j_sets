@@ -1,0 +1,87 @@
+stages:
+  - vs: "./audio/osci.vert"
+    mode: "LINES"
+    count: 8192
+    line_width: 2
+    target: "osci"
+  - vs: "./audio/fft.vert"
+    mode: "LINES"
+    count: 8192
+    line_width: 5
+    target: "fft"
+
+  - fs: scenes/vapor/vapor.frag
+    target: render
+    mipmap: true
+    float: true
+
+  - fs: post/ascii.frag
+    target: render
+
+  - fs: code.frag
+    target: render
+
+  - fs: foreground.frag
+    target: foreground
+
+  - fs: composite.frag
+    target: render
+    mipmap: true
+
+  - fs: post/uv_stretch.frag
+    target: render
+
+  - fs: post/dither.frag
+    target: render
+
+  - fs: post/sobel.frag
+    target: render
+
+  - fs: post/ascii.frag
+    target: render
+
+  - fs: post/grain.frag
+    target: render
+
+  - fs: post/glitch.frag
+    target: render
+
+  - fs: post/chromab.frag
+    target: render
+
+  - fs: post/jitter.frag
+    target: render
+
+  - fs: scenes/video/tonemap.frag
+    target: scene
+
+  - fs: screenspace.frag
+
+
+ndi:
+    - source: "obs"
+      name: "code"
+
+images:
+  - path: "./images/dots.png"
+    name: "dots"
+  - path: "./images/text_vcr.png"
+    name: "font_atlas"
+    wrap_mode: repeat
+  - path: "./images/logo.PNG"
+    name: "logo"
+  - path: "./images/cave_logo.png"
+    name: "cave_logo"
+
+audio:
+  audio_samples: 8192
+  attack: 0.
+  decay: 0.
+  spectrum_smooth:
+    filter: linear
+    mipmap: true
+  spectrum:
+    filter: linear
+    mipmap: true
+  samples:
+    filter: linear

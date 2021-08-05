@@ -1,0 +1,72 @@
+stages:
+  - vs: audio/fft.vert
+    target: fft
+    count: 40000
+    mode: LINES
+    thickness: 2
+  - vs: audio/osci.vert
+    target: osci
+    count: 16384
+    mode: LINES
+    thickness: 2
+
+  - fs: song/yura.frag
+    target: yura
+  - fs: song/present.frag
+    target: render
+  - fs: post.frag
+    target: composite
+  - fs: screenspace.frag
+
+images:
+  - path: images/yurayura.png
+    name: yurayura
+  - path: images/Checker_crt.png
+    name: checker
+  - path: images/CRT_Overlay.png
+    name: overlay
+
+  - path: images/lyrics/anataga.png
+    name: anataga
+  - path: images/lyrics/anocono.png
+    name: anocono
+  - path: images/lyrics/caeru.png
+    name: caeru
+  - path: images/lyrics/cocohe.png
+    name: cocohe
+  - path: images/lyrics/conobashowo.png
+    name: conobashowo
+  - path: images/lyrics/hatenai.png
+    name: hatenai
+  - path: images/lyrics/hutariha.png
+    name: hutariha
+  - path: images/lyrics/itsu.png
+    name: itsu
+  - path: images/lyrics/itsuca.png
+    name: itsuca
+    wrap_mode: repeat
+    filter: linear
+  - path: images/lyrics/nare.png
+    name: nare
+  - path: images/lyrics/otozurerutoci.png
+    name: otozurerutoci
+  - path: images/lyrics/secaiwo.png
+    name: secaiwo
+  - path: images/lyrics/toocu.png
+    name: toocu
+  - path: images/lyrics/umihe.png
+    name: umihe
+  - path: images/lyrics/utaha.png
+    name: utaha
+  - path: images/lyrics/yumeni.png
+    name: yumeni
+
+
+audio:
+  audio_samples: 16384
+  spectrum:
+    filter: linear
+    wrap_mode: clamp
+    mipmap: true
+  samples:
+    filter: linear
